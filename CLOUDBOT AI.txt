@@ -1,0 +1,66 @@
+
+import streamlit as st
+import google.generativeai as genai
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# ============================
+#   CONFIGURE GEMINI API
+# ============================
+API_KEY = "#YOUR API KEY"
+genai.configure(api_key=API_KEY)
+
+model = genai.GenerativeModel("gemini-2.5-flash")
+
+# ============================
+#   STREAMLIT UI
+# ============================
+st.title("🤖 Chatbot Dashboard (Gemini AI)")
+st.text("Welcome to your chatbot dashboard!")
+st.header("Chat With Your Model")
+
+# Input for user message
+user_msg = st.text_input("Enter your message :")
+
+# Button to send
+if st.button("Send Message"):
+    if user_msg.strip() != "":
+        with st.spinner("Generating response..."):
+            response = model.generate_content(user_msg)
+        st.success("Bot Response:")
+        st.write(response.text)
+
+# File upload (Optional)
+st.header("Upload a File (Optional)")
+file = st.file_uploader("Upload your file")
+if file:
+    content = file.read()
+    st.write("File Uploaded Successfully !!!")
+
+# Sample Data Table (Just like your example)
+st.header("Sample Data Table")
+data = {"Name": ["TOM", "Jack", "POP", "HERRY"], "Marks": [10, 20, 20, 10]}
+df = pd.DataFrame(data)
+st.dataframe(df)
+
+# Line Chart
+st.header("Line Chart of Marks")
+data_chart = pd.DataFrame({
+    "marks": [10, 20, 20, 10]
+})
+st.line_chart(data_chart)
+
+# Bar Chart
+st.header("Bar Chart of Marks")
+st.bar_chart(data_chart)
+
+# Pie Chart
+st.header("Pie Chart Example")
+subjects = ["Python", "C++", "Java"]
+marks = [20, 10, 5]
+
+fig, ax = plt.subplots()
+ax.pie(marks, labels=subjects, autopct='%1.1f%%')
+st.pyplot(fig)
+
+st.success("Dashboard Loaded Successfully!")
